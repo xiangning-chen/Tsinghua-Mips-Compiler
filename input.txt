@@ -1,0 +1,125 @@
+j Normal
+j Interrupt
+j Exit
+Enable: lui $sp, 16384
+addi $t1, $zero, 3 
+sw $t1, 8($sp)
+sll $ra, $ra, 1
+srl $ra, $ra, 1
+jr $ra
+Normal: jal Enable
+addi $s4, $zero, 16
+addi $s3, $zero, 8
+addi $s2, $zero, 1
+addi $s1, $zero, 0
+sw $zero, 8($sp)
+lui $s5, 65535
+sra $s6, $s5, 16
+sw $s6, 4($sp)
+addi $s5, $zero, 64110
+sw $s5, 0($sp)
+addi $s6, $zero, 3
+sw $s6, 8($sp)
+sw $zero, 12($sp)
+sw $zero, 20($sp)
+Loop: lw $s0, 32($sp)
+andi $s0, $s0, 8
+bne $s0, $s3, Loop
+beq $s1, $zero, Num1
+beq $s1, $s2, Num2
+Num1: lw $a0, 28($sp)
+add $t6, $a0, $zero
+addi $s1, $s1, 1
+j Loop
+Num2: lw $a1, 28($sp)
+add $t7, $a1, $zero
+GCD: sub $t4, $a1, $a0
+bltz $t4, Divide
+add $t3, $zero, $a1
+add $a1, $zero, $a0
+add $a0, $zero, $t3
+Divide: sub $a0, $a0, $a1
+sub $t4, $a1, $a0
+bltz $t4, Divide
+bne $a0, $zero, GCD
+sw $a1, 24($sp)
+sw $a1, 12($sp)
+addi $s1, $zero, 0
+j Loop
+Interrupt: lw $t8, 8($sp)
+add $t9, $zero, $zero
+addi $t9, $t9, -7
+and $t9, $t8, $t9
+sw	$t9, 8($sp)
+lw $t0, 20($sp)
+srl $t0, $t0, 8
+addi $t1, $zero, 8
+addi $t2, $zero, 4
+andi $t3, $t6, 15
+beq	$t0, $t1, Decode
+addi $t1, $zero, 4
+addi $t2, $zero, 2
+andi $t3, $t7, 240
+srl $t3, $t3, 4
+beq $t0, $t1, Decode
+addi $t1, $zero, 2
+addi $t2, $zero, 1
+andi $t3, $t7, 15
+beq	$t0, $t1, Decode
+addi $t2, $zero, 8
+andi $t3, $t6, 240
+srl $t3, $t3, 4
+Decode: addi $t5, $zero, 192
+beq $t3, $zero, Next
+addi $t4, $zero, 1
+addi $t5, $zero, 249
+beq $t3, $t4, Next
+addi $t4, $zero, 2
+addi $t5, $zero, 164
+beq $t3, $t4, Next
+addi $t4, $zero, 3
+addi $t5, $zero, 176
+beq $t3, $t4, Next
+addi $t4, $zero, 4
+addi $t5, $zero, 153
+beq $t3, $t4, Next
+addi $t4, $zero, 5
+addi $t5, $zero, 146
+beq $t3, $t4, Next
+addi $t4, $zero, 6
+addi $t5, $zero, 130
+beq $t3, $t4, Next
+addi $t4, $zero, 7
+addi $t5, $zero, 248
+beq $t3, $t4, Next
+addi $t4, $zero, 8
+addi $t5, $zero, 128
+beq $t3, $t4, Next
+addi $t4, $zero, 9
+addi $t5, $zero, 144
+beq $t3, $t4, Next
+addi $t4, $zero, 10
+addi $t5, $zero, 136
+beq $t3, $t4, Next
+addi $t4, $zero, 11
+addi $t5, $zero, 131
+beq $t3, $t4, Next
+addi $t4, $zero, 12
+addi $t5, $zero, 198
+beq $t3, $t4, Next	
+addi $t4, $zero, 13
+addi $t5, $zero, 161
+beq $t3, $t4, Next
+addi $t4, $zero, 14
+addi $t5, $zero, 134
+beq $t3, $t4, Next
+addi $t5, $zero, 142
+Next: sll $t2, $t2, 8
+add $t0, $t2, $t5
+sw $t0, 20($sp)
+lw $t8, 8($sp)
+addi $t9, $zero, 2
+or $t9, $t8, $t9
+sw $t9, 8($sp)
+jr $k0
+Exit: sll $zero, $zero, 0
